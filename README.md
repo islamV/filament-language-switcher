@@ -206,11 +206,11 @@ The plugin contains built-in mappings for all standard language codes, including
 
 | Code | Native Name | Default Flag |
 | :--- | :--- | :--- |
-| `ar` / `ar_LY` | العربية (ليبيا) | 🇱🇾 `ly` |
-| `ar_SA` | العربية (السعودية) | 🇸🇦 `sa` |
 | `ar_EG` | العربية (مصر) | 🇪🇬 `eg` |
+| `ar_SA` | العربية (السعودية) | 🇸🇦 `sa` |
 | `ar_AE` | العربية (الإمارات) | 🇦🇪 `ae` |
 | `en` / `en_US` | English (US) | 🇺🇸 `us` |
+| `ar` / `ar_LY` | العربية (ليبيا) | 🇱🇾 `ly` |
 | `en_GB` | English (UK) | 🇬🇧 `gb` |
 | `fr` | Français | 🇫🇷 `fr` |
 | `es` | Español | 🇪🇸 `es` |

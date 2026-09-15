@@ -7,6 +7,8 @@ use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Crypt;
+use Islamv\FilamentLanguageSwitcher\Events\LocaleChanged;
+use Islamv\FilamentLanguageSwitcher\FilamentLanguageSwitcherPlugin;
 use Throwable;
 
 class SetLocale
@@ -23,13 +25,12 @@ class SetLocale
      */
     public function handle(Request $request, Closure $next): mixed
     {
+        $oldLocale = App::getLocale();
         $locale = $this->resolveLocale($request);
 
         if ($locale) {
             App::setLocale($locale);
         }
-
-        $response = $next($request);
 
         if ($request->hasSession() && $locale) {
             if ($request->session()->get('locale') !== $locale) {
@@ -37,15 +38,38 @@ class SetLocale
             }
         }
 
-        return $response;
+        $rememberDays = FilamentLanguageSwitcherPlugin::getRememberLocaleDays();
+        if ($rememberDays !== null && $locale) {
+            $cookie = $rememberDays === 0
+                ? cookie()->forever('filament_language_switcher_locale', $locale)
+                : cookie('filament_language_switcher_locale', $locale, $rememberDays * 24 * 60);
+
+            cookie()->queue($cookie);
+        }
+
+        if ($locale && $oldLocale !== $locale) {
+            event(new LocaleChanged(newLocale: $locale, oldLocale: $oldLocale));
+        }
+
+        return $next($request);
     }
 
     /**
-     * Resolve locale from request session, cookies, or configuration.
+     * Resolve locale from request query, session, cookies, or configuration.
      */
     protected function resolveLocale(Request $request): string
     {
-        // 1. Check if request has an active session
+        // 1. Check URL query parameters (?lang=ar, ?locale=ar, etc.)
+        $queryLocale = $request->query('lang')
+            ?? $request->query('locale')
+            ?? $request->query('change-language')
+            ?? $request->query('change-locale');
+
+        if ($queryLocale && is_string($queryLocale) && $this->isLocaleSupported($queryLocale)) {
+            return $queryLocale;
+        }
+
+        // 2. Check if request has an active session
         if ($request->hasSession()) {
             $sessionLocale = $request->session()->get('locale');
             if ($sessionLocale && $this->isLocaleSupported($sessionLocale)) {
@@ -53,7 +77,7 @@ class SetLocale
             }
         }
 
-        // 2. Check if global session manager has an active/started session
+        // 3. Check if global session manager has an active/started session
         if (app()->bound('session')) {
             try {
                 $session = app('session');
@@ -68,7 +92,7 @@ class SetLocale
             }
         }
 
-        // 3. Check already decrypted cookie (if EncryptCookies ran)
+        // 4. Check already decrypted cookie (if EncryptCookies ran)
         $cookieLocale = $request->cookie('filament_language_switcher_locale')
             ?? $request->cookie('filament_language_switch_locale');
 
@@ -76,7 +100,7 @@ class SetLocale
             return $cookieLocale;
         }
 
-        // 4. Check raw encrypted or plaintext language cookie
+        // 5. Check raw encrypted or plaintext language cookie
         $rawCookie = $request->cookies->get('filament_language_switcher_locale')
             ?? $request->cookies->get('filament_language_switch_locale');
 
@@ -87,7 +111,7 @@ class SetLocale
             }
         }
 
-        // 5. Check session cookie if session driver is database/file/redis
+        // 6. Check session cookie if session driver is database/file/redis
         $sessionCookieName = config('session.cookie');
         $rawSessionCookie = $sessionCookieName ? $request->cookies->get($sessionCookieName) : null;
 

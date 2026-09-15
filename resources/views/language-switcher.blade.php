@@ -7,7 +7,11 @@
         $prefixes = ['flags-', 'flags-1x1-', 'flags-4x3-', 'flag-country-', 'flag-1x1-', 'flag-4x3-', 'flag-'];
         foreach ($prefixes as $prefix) {
             try {
-                return svg($prefix . $flagCode)->toHtml();
+                $html = svg($prefix . $flagCode)->toHtml();
+                if (! str_contains($html, 'preserveAspectRatio')) {
+                    $html = preg_replace('/<svg\b/', '<svg preserveAspectRatio="xMidYMid slice"', $html, 1);
+                }
+                return $html;
             } catch (\Throwable $e) {
                 // Try next prefix
             }
@@ -19,10 +23,10 @@
 @once
 <style>
     .fi-flag-badge {
-        width: 1.35rem !important;
-        height: 1.35rem !important;
-        min-width: 1.35rem !important;
-        max-width: 1.35rem !important;
+        width: 1.4rem !important;
+        height: 1.4rem !important;
+        min-width: 1.4rem !important;
+        max-width: 1.4rem !important;
         border-radius: 9999px !important;
         overflow: hidden !important;
         display: inline-flex !important;
@@ -57,7 +61,6 @@
         min-height: 100% !important;
         object-fit: cover !important;
         display: block !important;
-        transform: scale(1.4) !important;
     }
 
     .fi-check-icon {
@@ -78,7 +81,7 @@
         <x-slot name="trigger" style="display: flex; align-items: center; justify-content: center; padding: 0.25rem;">
             <button
                 type="button"
-                style="width: 2.15rem; height: 2.15rem; min-width: 2.15rem; max-width: 2.15rem; border-radius: 9999px; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; border: 1px solid rgba(0, 0, 0, 0.12); background-color: #ffffff; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06); transition: all 0.15s ease; padding: 0;"
+                style="width: 2.15rem; height: 2.15rem; min-width: 2.15rem; max-width: 2.15rem; border-radius: 9999px; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; border: 1px solid rgba(0, 0, 0, 0.12); background-color: #ffffff; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); transition: all 0.15s ease; padding: 0;"
                 class="hover:scale-105 hover:ring-2 hover:ring-primary-500/40 focus:outline-none dark:border-white/20 dark:bg-gray-800"
                 title="{{ $currentLanguage['name'] ?? 'Language' }}"
             >
@@ -110,7 +113,7 @@
                 >
                     <div style="display: flex; align-items: center; min-width: 0; flex: 1;">
                         @if ($showFlags ?? true)
-                            <div class="fi-flag-badge" style="width: 1.35rem; height: 1.35rem; min-width: 1.35rem; max-width: 1.35rem; border-radius: 9999px; overflow: hidden; margin-inline-end: 0.75rem; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);" class="dark:ring-white/20">
+                            <div class="fi-flag-badge" style="width: 1.4rem; height: 1.4rem; min-width: 1.4rem; max-width: 1.4rem; border-radius: 9999px; overflow: hidden; margin-inline-end: 0.75rem; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);" class="dark:ring-white/20">
                                 @if ($itemSvg)
                                     {!! $itemSvg !!}
                                 @else

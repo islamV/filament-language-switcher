@@ -16,6 +16,63 @@
     };
 @endphp
 
+@once
+<style>
+    .fi-flag-badge {
+        width: 1.35rem !important;
+        height: 1.35rem !important;
+        min-width: 1.35rem !important;
+        max-width: 1.35rem !important;
+        border-radius: 9999px !important;
+        overflow: hidden !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex-shrink: 0 !important;
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12) !important;
+    }
+
+    .fi-flag-trigger {
+        width: 2.15rem !important;
+        height: 2.15rem !important;
+        min-width: 2.15rem !important;
+        max-width: 2.15rem !important;
+        border-radius: 9999px !important;
+        overflow: hidden !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex-shrink: 0 !important;
+    }
+
+    .fi-flag-badge svg,
+    .fi-flag-trigger svg,
+    .fi-flag-badge img,
+    .fi-flag-trigger img {
+        width: 100% !important;
+        height: 100% !important;
+        max-height: 100% !important;
+        max-width: 100% !important;
+        min-width: 100% !important;
+        min-height: 100% !important;
+        object-fit: cover !important;
+        display: block !important;
+        transform: scale(1.4) !important;
+    }
+
+    .fi-check-icon {
+        width: 1.15rem !important;
+        height: 1.15rem !important;
+        min-width: 1.15rem !important;
+        max-width: 1.15rem !important;
+        min-height: 1.15rem !important;
+        max-height: 1.15rem !important;
+        flex-shrink: 0 !important;
+        display: inline-block !important;
+    }
+</style>
+@endonce
+
 <div @if($floating ?? false) style="position: fixed; top: 0.75rem; inset-inline-end: 1rem; z-index: 50;" @endif class="fi-dropdown-language-switcher flex items-center">
     <x-filament::dropdown placement="bottom-end" maxHeight="36rem" teleport>
         <x-slot name="trigger" style="display: flex; align-items: center; justify-content: center; padding: 0.25rem;">

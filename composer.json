@@ -1,0 +1,58 @@
+{
+    "$schema": "https://getcomposer.org/schema.json",
+    "name": "islamv/filament-language-switcher",
+    "description": "An elegant, reliable and fully customizable Language Switcher plugin for Filament panels with RTL and multi-subdomain support.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "filament",
+        "laravel",
+        "language-switcher",
+        "locale",
+        "i18n",
+        "plugin",
+        "rtl"
+    ],
+    "authors": [
+        {
+            "name": "Islam Abdelkarim",
+            "email": "islamabdelkarimpro@gmail.com",
+            "role": "Software Engineer"
+        }
+    ],
+    "require": {
+        "php": "^8.2|^8.3|^8.4|^8.5",
+        "filament/filament": "^4.0|^5.0",
+        "spatie/laravel-package-tools": "^1.16",
+        "stijnvanouplines/blade-country-flags": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0|^11.0|^12.0",
+        "mockery/mockery": "^1.6",
+        "orchestra/testbench": "^9.0|^10.0",
+        "laravel/pint": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Islamv\\FilamentLanguageSwitcher\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Islamv\\FilamentLanguageSwitcher\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Islamv\\FilamentLanguageSwitcher\\FilamentLanguageSwitcherServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
